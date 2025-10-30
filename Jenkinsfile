@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     DOCKERHUB_CRED = 'dockerhub-creds'      
-    IMAGE = 'aryanjamwal001/dockerproject'   // apna DockerHub username likh
+    IMAGE = 'aryanjamwal001/dockerproject'
     KUBE_NAMESPACE = 'default'
   }
 
@@ -17,7 +17,14 @@ pipeline {
     stage('Install & Test') {
       steps {
         bat 'npm install'
-        // bat 'npm test'  // optional
+      }
+    }
+
+    stage('Login to DockerHub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CRED}", usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+          bat 'echo %DH_PASS% | docker login --username %DH_USER% --password-stdin'
+        }
       }
     }
 
@@ -31,10 +38,8 @@ pipeline {
     stage('Push Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CRED}", usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
-          bat 'echo %DH_PASS% | docker login --username %DH_USER% --password-stdin'
           bat "docker push %IMAGE%:%BUILD_NUMBER%"
           bat "docker push %IMAGE%:latest"
-          bat 'docker logout'
         }
       }
     }
@@ -49,6 +54,7 @@ pipeline {
 
   post {
     always {
+      bat 'docker logout'
       echo "✅ Pipeline finished successfully!"
     }
   }
