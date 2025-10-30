@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_CRED = 'dockerhub-creds'      
-    IMAGE = 'aryanjamwal001/dockerproject'
+    DOCKERHUB_CRED = 'dockerhub-credentials'    // Updated to match Jenkins credentials ID
+    IMAGE = 'aryandocker122/dockerproject'      // Use your DockerHub username
     KUBE_NAMESPACE = 'default'
   }
 
@@ -17,6 +17,8 @@ pipeline {
     stage('Install & Test') {
       steps {
         bat 'npm install'
+        // If you have tests, uncomment the next line
+        // bat 'npm test'
       }
     }
 
