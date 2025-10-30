@@ -1,0 +1,14 @@
+{
+  "name": "dockerproject",
+  "version": "1.0.0",
+  "description": "Ecommerce demo app with Node, Express, MongoDB, Docker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.1"
+  }
+}
